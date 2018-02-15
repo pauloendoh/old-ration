@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="left-container">
+    <br>
+</div>
+
+<div class="middle-container">
+    <h3>ALL ITEMS</h3>
+    <table class="your-list">
+        <tr>
+            <th class="your-list-number">#</th>
+            <th class="your-list-title">Title</th>
+            <th class="your-list-type">Type</th>
+            <th class="your-list-rating-interest"><a href="{% url 'items' %}?order=rating">AVG RATING</a></th>
+            <th class="your-list-rating-interest"><a href="{% url 'items' %}?order=interest">AVG INT</a></th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td class="your-list-number">{{ forloop.counter }}</td>
+            <td class="your-list-title"><a href="{% url 'show_item' item.id %}">{{ item.title }}</a></td>
+            <td class="your-list-type">{{ item.type }}</td>
+            <td class="your-list-rating-interest">{{ item.avg_rating|floatformat }}</td>
+            <td class="your-list-rating-interest">{{ item.avg_interest|floatformat }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="right-container">
+    <br>
+</div>
+{% endblock%}

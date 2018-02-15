@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if user.id != item.created_by_id %}
+<script language="javascript">
+    window.location.href = "http://localhost:8080/"
+
+
+</script>
+{% endif %}
+
+<!-- Confirm deletion of item using jQuery -->
+<script>
+    $(document).ready(function(){
+        $("#delete-item-button").click(function(){
+            var r = confirm("Delete '{{ item.title}}' ?");
+            if (r == true){
+                window.location.href="{% url 'delete_item' item.id %}"
+            }
+        });
+    });
+
+
+</script>
+
+<!--Left container-->
+<div class="left-container">
+    <br>
+</div>
+
+<!--Middle container-->
+<div class="middle-container">
+    <h3>Edit Item
+        <button id="delete-item-button"><i class="material-icons">delete</i></button>
+    </h3>
+    <form id='edit_item' method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Title: <input type="text" name="title" value="{{ item.title  }}" autofocus/>{{ form.title.errors }}</p>
+        <p>Description: <br><textarea name='description' form="edit_item" rows="8"
+                                   >{{ item.description}}</textarea></p>
+        <p>Type: <input type="text" name="type" value="{{ item.type }}"/></p>
+        <p>Image: <input type="file" name="image"/></p>
+        <input type="submit" value="Save"/>
+    </form>
+</div>
+
+
+<!--Right container-->
+<div class="right-container">
+    <br>
+</div>
+{% endblock %}

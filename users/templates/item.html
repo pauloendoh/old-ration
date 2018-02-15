@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<!--AJAX to update rating and interest-->
+<script>
+    $(document).ready(function(){
+        $("#change-item-rating-interest-form").on('submit', function(event){
+            event.preventDefault();
+            console.log("form submitted");
+            create_post();
+        });
+    });
+
+    function create_post(){
+        console.log("create post started"); // sanity check
+
+        $.ajax({
+            url: "/ajax/update_interaction",
+            type: "POST",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                rating: $("#your-rating").val(),
+                interest: $("#your-interest").val(),
+                user_id: {{ user.id }},
+                item_id: {{ item.id }}
+
+            } ,
+            dataType: 'json',
+
+            // handle a succesful response
+            success : function(data){
+                console.log(data.teste);
+                console.log("success");
+
+                $(".saved-message").remove();
+                $("#update-interaction-button").after("<label style='color:yellow;' class='saved-message'>   Saved!</label>");
+            }
+
+
+
+        })
+
+    };
+</script>
+
+<div class="left-container">
+    <br>
+</div>
+<div class="middle-container">
+    <h3>{{item.title}}
+        {% if user.id == item.created_by.id %}
+        <a class="edit-button" href="{% url 'edit_item' item.id %}">Edit item</a>
+        {% endif %}
+    </h3>
+    <div class="item-left-container">
+        <img class="item-image" src="/media/{{ item.image }}"/>
+        <ul>
+            <li>AVERAGE RATING <br> {{ item.avg_rating|floatformat }} / 5</li>
+            <li>AVERAGE INTEREST<br> {{ item.avg_interest|floatformat }} / 3</li>
+            {% if user.is_authenticated %}
+            <li>
+                <form class="rating" id="change-item-rating-interest-form" method="post"
+                      action="{% url 'user_item' item.id %}">
+                    {% csrf_token %}
+
+                    <p>
+                        YOUR RATING: <input type="number"  id="your-rating" min="1" max="5" name="rating" value="{{  user_item.rating|floatformat }}"/> / 5
+                    </p>
+                    <p>YOUR INTEREST: <input type="number" id="your-interest" name="interest" max="3" min="1" value="{{ user_item.interest|floatformat}}"/> / 3</p>
+                    <button id="update-interaction-button" form="change-item-rating-interest-form" type="submit" value="SAVE">SAVE</button>
+                </form>
+            </li>
+            {% endif %}
+
+        </ul>
+    </div>
+    <div class="item-middle-right-container">
+        <h4>Description: </h4>
+        <p>{{item.description}}</p>
+        <ul>
+            <li>Type: {{item.type}}</li>
+            <li>Item created by @{{item.created_by.username}}</li>
+            <li>Last edited on {{item.created_on}}</li>
+        </ul>
+    </div>
+
+
+</div>
+<div class="right-container">
+    <br>
+</div>
+{% endblock %}

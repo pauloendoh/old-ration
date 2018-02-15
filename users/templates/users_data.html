@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if not user.is_superuser %}
+<script language="javascript">
+    window.location.href = "http://localhost:8080/"
+
+
+
+
+</script>
+{% endif %}
+<div class="left-container">
+    <br>
+</div>
+<div class="middle-container">
+    <h3>Users:</h3>
+    <table class="your-list">
+        <tr>
+            <th class="your-list-number">ID</th>
+            <th class="your-list-type">Username</th>
+            <th class="your-list-type">Email</th>
+        </tr>
+        {% for u in users %}
+        {% if forloop.counter|divisibleby:2 %}
+        <tr class="pair">{% else %}
+        <tr class="odd">
+            {% endif %}
+
+            <td class="your-list-number">{{u.id}}</td>
+            <td class="your-list-type">{{u.username}}</td>
+            <td class="your-list-type">{{u.email}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+
+<div class="right-container">
+    <br>
+</div>
+{% endblock%}

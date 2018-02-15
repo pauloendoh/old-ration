@@ -1,0 +1,71 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ration</title>
+    <link href="{% static 'styles/main.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Exo+2:700|Noto+Sans:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!--importing Google icons-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!--importing jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!--importing Font Awesome Icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!--importing star rating-->
+    <link rel="stylesheets" href="{% static 'styles/star-rating-svg.css' %}" />
+    <script src="{% static 'scripts/jquery.star-rating-svg.js' %}"></script>
+
+</head>
+
+
+<body>
+<ul class="header">
+    <li class="ration-home-icon"><a href="{% url 'index' %}">Ration</a></li>
+    <li class="searchbar">
+        <form action="{% url 'search' %}" method="get">
+            <input type="text" required placeholder="Search" name="q" id="textfield"/>
+            <button type="submit" class="search-button">
+                <i class="material-icons">search</i>
+            </button>
+        </form>
+    </li>
+    <li class="left"><a href="{% url 'items'%}">ALL ITEMS</a></li>
+    {% if user.is_authenticated %}
+    <li class="left"><a href="{% url 'create_item' %}">CREATE ITEM</a>
+    </li>
+
+    <li class="right logout-button"><a href="{% url 'logout' %}">LOGOUT</a></li>
+    <li class="right"><a href="{% url 'index' %}">{{ user.username }}
+    </a></li>
+
+    {% else %}
+    <li class="right signup-button">
+        <a href="{% url 'signup' %}">SIGN UP</a>
+    </li>
+    <li class="right login-button">
+        <a href="{% url 'login' %}">LOGIN</a>
+    </li>
+    {% endif %}
+</ul>
+
+{% if user.is_superuser %}
+<ul class="admin-header">
+    <li class="left admin-dashboard">ADMIN DASHBOARD</li>
+    <li class="left see-users-data"><a href="{% url 'users_data' %}">Users data</a>
+    </li>
+</ul>
+{% endif %}
+<div class="lower-header">
+    <p></p>
+</div>
+{% block body %}
+{% endblock %}
+</body>
+</html>

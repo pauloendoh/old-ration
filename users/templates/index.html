@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block body %}
+{% if user.is_authenticated %}
+
+<!--Script for filtering list-->
+<script>
+    $(document).ready(function(){
+        $("#filter-list-input").keyup(function(){
+            var value = $(this).val().toLowerCase();
+            $(".item-list").filter(function(){
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+<div class="left-container">
+    <br>
+</div>
+<div class="middle-container">
+    <h3>YOUR RATINGS AND INTERESTS: <input id="filter-list-input" type="text" placeholder="Filter list" /></h3>
+    <table class="your-list">
+        <tr>
+            <th class="your-list-number">#</th>
+            <th class="your-list-title">TITLE</th>
+            <th class="your-list-type">TYPE</th>
+            <th class="your-list-rating-interest"><a href="{% url 'index'%}?order=rating">RATING</a></th>
+            <th class="your-list-rating-interest"><a href="{% url 'index'%}?order=interest">INT</a></th>
+        </tr>
+        {% for user_item in user_items %}
+        <tr class="item-list">
+            <td class="your-list-number">{{ forloop.counter }}</td>
+            <td class="your-list-title"><a href="{% url 'show_item' user_item.item.id %}">{{ user_item.item.title }}</a></td>
+            <td class="your-list-type">{{ user_item.item.type}}</td>
+            <td class="your-list-rating-interest">{{ user_item.rating|floatformat }}</td>
+            <td class="your-list-rating-interest">{{ user_item.interest|floatformat }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="right-container">
+    <br>
+</div>
+{% endif %}
+
+{% endblock %}

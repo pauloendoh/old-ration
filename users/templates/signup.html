@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if user.is_authenticated %}
+<script language="javascript">
+    window.location.href = "http://localhost:8080/"
+</script>
+{% endif %}
+
+<!--AJAX to check if username already exists-->
+<script>
+    $(document).ready(function(){
+        $("#id_username").change(function(){
+            var username = $(this).val();
+
+            $.ajax({
+                url: '/ajax/validate_username/',
+                data: {
+                  'username': username
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $(".validation-message").remove();
+                    if (data.is_taken) {
+                        $("#id_username").after("<label class='validation-message' style='color:red'>Username already being used</label>");
+                    } else {
+                        $("#id_username").after("<label class='validation-message' style='color:green'>Username available</label>");
+                  }
+                },
+
+            });
+        });
+    });
+
+</script>
+
+<div class="left-container">
+    <br>
+</div>
+<div class="middle-container">
+    <h3>Sign Up</h3>
+<form method="post" class="signup-form">
+    {% csrf_token %}
+    {% for field in form %}
+    <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% for error in field.errors %}
+    <p style="color:red"> {{ error }}</p>
+    {% endfor %}
+    </p>
+    {% endfor %}
+
+    <input type="submit" value="Sign Up">
+</form>
+</div>
+<div class="right-container">
+    <br>
+</div>
+
+{% endblock %}
